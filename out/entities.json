@@ -1,0 +1,106 @@
+[
+  {
+    "id": "base",
+    "name": "base",
+    "type": "module",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\base.py",
+    "line_number": 0,
+    "parent_id": null
+  },
+  {
+    "id": "base.BaseService",
+    "name": "BaseService",
+    "type": "class",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\base.py",
+    "line_number": 2,
+    "parent_id": "base"
+  },
+  {
+    "id": "base.BaseService.__init__",
+    "name": "__init__",
+    "type": "method",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\base.py",
+    "line_number": 3,
+    "parent_id": "base.BaseService"
+  },
+  {
+    "id": "base.BaseService.connect",
+    "name": "connect",
+    "type": "method",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\base.py",
+    "line_number": 6,
+    "parent_id": "base.BaseService"
+  },
+  {
+    "id": "base.BaseService.disconnect",
+    "name": "disconnect",
+    "type": "method",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\base.py",
+    "line_number": 10,
+    "parent_id": "base.BaseService"
+  },
+  {
+    "id": "main",
+    "name": "main",
+    "type": "module",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+    "line_number": 0,
+    "parent_id": null
+  },
+  {
+    "id": "main.mainService",
+    "name": "mainService",
+    "type": "class",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+    "line_number": 5,
+    "parent_id": "main"
+  },
+  {
+    "id": "main.mainService.run",
+    "name": "run",
+    "type": "method",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+    "line_number": 6,
+    "parent_id": "main.mainService"
+  },
+  {
+    "id": "main.mainService.process",
+    "name": "process",
+    "type": "method",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+    "line_number": 13,
+    "parent_id": "main.mainService"
+  },
+  {
+    "id": "main.entry_point",
+    "name": "entry_point",
+    "type": "function",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+    "line_number": 16,
+    "parent_id": "main"
+  },
+  {
+    "id": "utils",
+    "name": "utils",
+    "type": "module",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\utils.py",
+    "line_number": 0,
+    "parent_id": null
+  },
+  {
+    "id": "utils.logger",
+    "name": "logger",
+    "type": "function",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\utils.py",
+    "line_number": 2,
+    "parent_id": "utils"
+  },
+  {
+    "id": "utils.helper_func",
+    "name": "helper_func",
+    "type": "function",
+    "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\utils.py",
+    "line_number": 5,
+    "parent_id": "utils"
+  }
+]

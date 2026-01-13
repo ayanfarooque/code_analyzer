@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "base.BaseService",
+    "target_id": "base.BaseService.__init__",
+    "type": "DEFINES"
+  },
+  {
+    "source_id": "base.BaseService",
+    "target_id": "base.BaseService.connect",
+    "type": "DEFINES"
+  },
+  {
+    "source_id": "base.BaseService",
+    "target_id": "base.BaseService.disconnect",
+    "type": "DEFINES"
+  },
+  {
+    "source_id": "main.mainService",
+    "target_id": "main.mainService.run",
+    "type": "DEFINES"
+  },
+  {
+    "source_id": "main.mainService",
+    "target_id": "main.mainService.process",
+    "type": "DEFINES"
+  },
+  {
+    "source_id": "main",
+    "target_id": "base",
+    "type": "IMPORTS"
+  },
+  {
+    "source_id": "main",
+    "target_id": "utils",
+    "type": "IMPORTS"
+  },
+  {
+    "source_id": "main.mainService",
+    "target_id": "base.BaseService",
+    "type": "INHERITS"
+  },
+  {
+    "source_id": "main.mainService.run",
+    "target_id": "utils.logger",
+    "type": "CALLS"
+  },
+  {
+    "source_id": "main.mainService.run",
+    "target_id": "utils.helper_func",
+    "type": "CALLS"
+  },
+  {
+    "source_id": "main.entry_point",
+    "target_id": "main.mainService",
+    "type": "CALLS"
+  },
+  {
+    "source_id": "main",
+    "target_id": "main.entry_point",
+    "type": "CALLS"
+  },
+  {
+    "source_id": "utils.helper_func",
+    "target_id": "utils.logger",
+    "type": "CALLS"
+  }
+]
