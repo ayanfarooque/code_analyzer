@@ -1,0 +1,9 @@
+networkx
+# For Gemini API and .env support
+requests
+python-dotenv
+# Add other dependencies as needed for embedding, storage, and LLM features
+# Example placeholders:
+# lancedb
+# nomic
+# mlflow

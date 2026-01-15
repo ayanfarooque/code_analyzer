@@ -242,6 +242,15 @@ class ProjectScanner:
         for file_path in python_files:
             self._scan_relationships(file_path)
 
+import os
+from pathlib import Path
+
+class LocalScanner:
+    def __init__(self, repo_path):
+        self.repo_path = Path(repo_path)
+    def get_files(self):
+        # Recursively get all .py files in repo_path
+        return [str(p) for p in self.repo_path.rglob('*.py')]
     def _find_files(self) -> List[str]:
         """Walks directory and returns list of .py files."""
         py_files = []
