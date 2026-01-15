@@ -11,7 +11,7 @@ class ModernizationChat:
     def __init__(self, api_key=None):
         # Prefer GOOGLE_API_KEY from .env, fallback to GEMINI_API_KEY
         self.api_key = api_key or os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
-        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent"
 
     def chat(self, query, context=None):
         if not self.api_key:

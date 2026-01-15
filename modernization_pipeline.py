@@ -37,17 +37,19 @@ def run_modernization_pipeline(repo_path: str, target_subfolder_str: str):
         except Exception:
             continue
 
+
     # --- PASS 2: Target File Analysis ---
-    target_files = [f for f in all_files if Path(f).resolve().is_relative_to(target_path)]
+    # Analyze all .py files in the target folder
+    target_files = [str(p) for p in Path(target_path).rglob('*.py')]
     print(f"🔗 Found {len(target_files)} files in target. Building relationships...")
-    
+
     target_chunks = []
     for f_path in target_files:
         try:
             with open(f_path, 'rb') as f:
                 content_bytes = f.read()
                 builder.pass_2_calls(f_path, content_bytes)
-                
+
                 content_str = content_bytes.decode('utf-8', errors='ignore')
                 file_chunks = chunker.split_text(content_str)
                 for c in file_chunks:
@@ -66,11 +68,23 @@ def run_modernization_pipeline(repo_path: str, target_subfolder_str: str):
     else:
         print("[Warning] No graph was built (empty or None). Skipping graph export.")
 
+
     # Embedding and storing chunks
     print(f"🔎 Embedding {len(target_chunks)} code chunks...")
     for chunk in target_chunks:
         embedding = embedder.embed(chunk["content"])
         store.add_embedding(chunk["content"], embedding, chunk["file_path"], chunk["name"])
+
+    # LLM-based code explanation
+    chat = ModernizationChat()
+    print(f"🧠 Explaining {len(target_chunks)} code chunks with Gemini LLM...")
+    for i, chunk in enumerate(target_chunks):
+        prompt = f"Explain the following Python code in detail:\n\n{chunk['content']}"
+        try:
+            explanation = chat.chat(prompt)
+            print(f"\n--- Explanation for chunk {i+1} ({chunk['name']}): ---\n{explanation}\n")
+        except Exception as e:
+            print(f"[Error] Could not get explanation for chunk {i+1}: {e}")
 
     print("✅ Modernization pipeline complete.")
 
