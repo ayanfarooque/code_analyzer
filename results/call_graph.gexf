@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-01-19">
+    <creator>NetworkX 3.4.2</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="node">
+      <attribute id="0" title="type" type="string" />
+      <attribute id="1" title="name" type="string" />
+      <attribute id="2" title="file" type="string" />
+    </attributes>
+    <nodes>
+      <node id="base" label="base">
+        <attvalues>
+          <attvalue for="0" value="module" />
+          <attvalue for="1" value="base" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\base.py" />
+        </attvalues>
+      </node>
+      <node id="base.BaseService" label="base.BaseService">
+        <attvalues>
+          <attvalue for="0" value="class" />
+          <attvalue for="1" value="BaseService" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\base.py" />
+        </attvalues>
+      </node>
+      <node id="base.BaseService.__init__" label="base.BaseService.__init__">
+        <attvalues>
+          <attvalue for="0" value="method" />
+          <attvalue for="1" value="__init__" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\base.py" />
+        </attvalues>
+      </node>
+      <node id="base.BaseService.connect" label="base.BaseService.connect">
+        <attvalues>
+          <attvalue for="0" value="method" />
+          <attvalue for="1" value="connect" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\base.py" />
+        </attvalues>
+      </node>
+      <node id="base.BaseService.disconnect" label="base.BaseService.disconnect">
+        <attvalues>
+          <attvalue for="0" value="method" />
+          <attvalue for="1" value="disconnect" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\base.py" />
+        </attvalues>
+      </node>
+      <node id="main" label="main">
+        <attvalues>
+          <attvalue for="0" value="module" />
+          <attvalue for="1" value="main" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\main.py" />
+        </attvalues>
+      </node>
+      <node id="main.mainService" label="main.mainService">
+        <attvalues>
+          <attvalue for="0" value="class" />
+          <attvalue for="1" value="mainService" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\main.py" />
+        </attvalues>
+      </node>
+      <node id="main.mainService.run" label="main.mainService.run">
+        <attvalues>
+          <attvalue for="0" value="method" />
+          <attvalue for="1" value="run" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\main.py" />
+        </attvalues>
+      </node>
+      <node id="main.mainService.process" label="main.mainService.process">
+        <attvalues>
+          <attvalue for="0" value="method" />
+          <attvalue for="1" value="process" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\main.py" />
+        </attvalues>
+      </node>
+      <node id="main.entry_point" label="main.entry_point">
+        <attvalues>
+          <attvalue for="0" value="function" />
+          <attvalue for="1" value="entry_point" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\main.py" />
+        </attvalues>
+      </node>
+      <node id="utils" label="utils">
+        <attvalues>
+          <attvalue for="0" value="module" />
+          <attvalue for="1" value="utils" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\utils.py" />
+        </attvalues>
+      </node>
+      <node id="utils.logger" label="utils.logger">
+        <attvalues>
+          <attvalue for="0" value="function" />
+          <attvalue for="1" value="logger" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\utils.py" />
+        </attvalues>
+      </node>
+      <node id="utils.helper_func" label="utils.helper_func">
+        <attvalues>
+          <attvalue for="0" value="function" />
+          <attvalue for="1" value="helper_func" />
+          <attvalue for="2" value="C:\Users\Hp\Desktop\Internship_Ass\code_analyzer\tests\sample_project\utils.py" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="main" target="main.entry_point" id="0" type="CALLS" />
+      <edge source="main.mainService.run" target="utils.logger" id="1" type="CALLS" />
+      <edge source="main.mainService.run" target="utils.helper_func" id="2" type="CALLS" />
+      <edge source="main.entry_point" target="main.mainService" id="3" type="CALLS" />
+      <edge source="utils.helper_func" target="utils.logger" id="4" type="CALLS" />
+    </edges>
+  </graph>
+</gexf>

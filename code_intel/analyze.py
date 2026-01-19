@@ -12,11 +12,17 @@ import time
 from code_intel.scanner import ProjectScanner
 from code_intel.graph import CodeGraph
 from code_intel.report import CodeReporter
+from code_intel.artifacts import ArtifactWriter
 
 def main():
     parser = argparse.ArgumentParser(description="Code Intelligence Engine")
     parser.add_argument("path", help="Path to the Python codebase to analyze")
     parser.add_argument("--output", help="Folder to write output files to", required=True)
+    parser.add_argument(
+        "--extra-artifacts",
+        action="store_true",
+        help="Also generate AI-ready artifacts (domain overview, entity map, call graph, dependency report, business rules, ai_context.json)",
+    )
     
     args = parser.parse_args()
     
@@ -67,6 +73,10 @@ def main():
     # graph.json (Full Dump)
     with open(os.path.join(output_dir, "graph.json"), "w", encoding="utf-8") as f:
         json.dump(graph.to_json(), f, indent=2)
+
+    # Extra AI-ready artifacts
+    if args.extra_artifacts:
+        ArtifactWriter(graph, source_path).write_all(output_dir)
 
     print("Success!")
 

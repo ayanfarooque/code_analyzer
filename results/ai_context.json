@@ -1,0 +1,67 @@
+{
+  "source_root": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project",
+  "stats": {
+    "total_nodes": 13,
+    "total_edges": 13
+  },
+  "hotspots": {
+    "most_called": [
+      [
+        "utils.logger",
+        2
+      ],
+      [
+        "utils.helper_func",
+        1
+      ],
+      [
+        "main.mainService",
+        1
+      ],
+      [
+        "main.entry_point",
+        1
+      ]
+    ],
+    "top_orchestrators": [
+      [
+        "main.mainService.run",
+        2
+      ],
+      [
+        "main.entry_point",
+        1
+      ],
+      [
+        "main",
+        1
+      ],
+      [
+        "utils.helper_func",
+        1
+      ]
+    ],
+    "highest_coupling_modules": [
+      [
+        "main",
+        2
+      ]
+    ]
+  },
+  "entrypoints": [
+    {
+      "id": "main.mainService.run",
+      "name": "run",
+      "type": "method",
+      "file_path": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project\\main.py",
+      "line_number": 5,
+      "parent_id": "main.mainService"
+    }
+  ],
+  "imports": {
+    "main": [
+      "base",
+      "utils"
+    ]
+  }
+}

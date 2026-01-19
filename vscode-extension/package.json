@@ -1,0 +1,65 @@
+{
+  "name": "code-analyzer-runner",
+  "displayName": "Code Analyzer Runner",
+  "description": "Runs the local Code Analyzer and generates AI-ready artifacts + a README.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:**/code_intel/analyze.py",
+    "onCommand:codeAnalyzer.runAnalysis"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeAnalyzer.runAnalysis",
+        "title": "Code Analyzer: Run Analysis",
+        "category": "Code Analyzer"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "codeAnalyzer.runAnalysis",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Code Analyzer",
+      "properties": {
+        "codeAnalyzer.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Python executable used to run the analyzer (e.g. python, py, or full path)."
+        },
+        "codeAnalyzer.defaultOutputFolder": {
+          "type": "string",
+          "default": "results",
+          "description": "Default output folder name (relative to the analyzer project root)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/vscode": "^1.85.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  }
+}

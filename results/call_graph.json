@@ -1,0 +1,45 @@
+{
+  "source_root": "C:\\Users\\Hp\\Desktop\\Internship_Ass\\code_analyzer\\tests\\sample_project",
+  "edges": [
+    {
+      "source_id": "main.mainService.run",
+      "target_id": "utils.logger",
+      "type": "CALLS"
+    },
+    {
+      "source_id": "main.mainService.run",
+      "target_id": "utils.helper_func",
+      "type": "CALLS"
+    },
+    {
+      "source_id": "main.entry_point",
+      "target_id": "main.mainService",
+      "type": "CALLS"
+    },
+    {
+      "source_id": "main",
+      "target_id": "main.entry_point",
+      "type": "CALLS"
+    },
+    {
+      "source_id": "utils.helper_func",
+      "target_id": "utils.logger",
+      "type": "CALLS"
+    }
+  ],
+  "adjacency": {
+    "main.mainService.run": [
+      "utils.helper_func",
+      "utils.logger"
+    ],
+    "main.entry_point": [
+      "main.mainService"
+    ],
+    "main": [
+      "main.entry_point"
+    ],
+    "utils.helper_func": [
+      "utils.logger"
+    ]
+  }
+}

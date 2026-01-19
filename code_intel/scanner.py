@@ -1,18 +1,26 @@
-"""
-scanner.py
+"""code_intel.scanner
 
-This module handles the static analysis of the codebase.
-It walks the directory structure, parses Python files into ASTs,
-and uses visitors to extract Entities and Relationships.
+Static analysis for Python projects.
+
+This scanner performs a two-pass walk over Python source files:
+1) Pass 1 extracts definitions (modules, classes, functions, methods).
+2) Pass 2 extracts relationships (imports, calls, inheritance) using a simple
+    import-resolution map built per file.
+
+The goal is a lightweight, dependency-free (stdlib-only) analyzer that is
+robust on Windows paths.
 """
+
+from __future__ import annotations
 
 import ast
 import os
-from typing import List, Tuple, Dict, Optional, Set
+from pathlib import Path
+from typing import Dict, List, Optional
 
-from code_intel.entities import Entity, FunctionEntity, ClassEntity, MethodEntity, ModuleEntity
-from code_intel.relations import Relationship, REL_CALLS, REL_DEFINES, REL_INHERITS, REL_IMPORTS
+from code_intel.entities import ClassEntity, FunctionEntity, MethodEntity, ModuleEntity
 from code_intel.graph import CodeGraph
+from code_intel.relations import REL_CALLS, REL_DEFINES, REL_IMPORTS, REL_INHERITS, Relationship
 
 class DefinitionVisitor(ast.NodeVisitor):
     """
@@ -43,7 +51,7 @@ class DefinitionVisitor(ast.NodeVisitor):
         # Check if parent is a ClassEntity (by checking the graph or context)
         is_method = False
         parent_entity = self.graph.get_entity(self.current_parent)
-        if parent_entity and parent_entity.type == 'class':
+        if parent_entity and parent_entity.type == "class":
             is_method = True
 
         name = node.name
@@ -161,18 +169,9 @@ class RelationshipVisitor(ast.NodeVisitor):
         # Extract the name of the function being called
         func_name = self._get_full_name(node.func)
         if func_name:
-            # Attempt to resolve the function to an Entity ID
             target_id = self._resolve_id(func_name)
-            
-            # Even if we can't fully resolve it (e.g. library function), 
-            # we might want to track it if it's internal.
-            # For now, only add if we think it's in our graph (or we can validly guess).
             if target_id and self.graph.get_entity(target_id):
-                 self.graph.add_relationship(Relationship(self.current_context, target_id, REL_CALLS))
-            elif target_id:
-                # Even if not in graph (e.g. potential cross-module call we missed?), add strict checking?
-                # We'll be lenient: if we resolved it to a likely ID, add it.
-                pass
+                self.graph.add_relationship(Relationship(self.current_context, target_id, REL_CALLS))
         
         self.generic_visit(node)
 
@@ -231,29 +230,17 @@ class ProjectScanner:
     def scan(self):
         """Runs the two-pass scan on the project."""
         python_files = self._find_files()
-        
-        # Pass 1: Definitions
+
         print(f"Scanning {len(python_files)} files for definitions...")
         for file_path in python_files:
             self._scan_definitions(file_path)
-            
-        # Pass 2: Relationships
-        print(f"Scanning relationships...")
+
+        print("Scanning relationships...")
         for file_path in python_files:
             self._scan_relationships(file_path)
 
-import os
-from pathlib import Path
-
-class LocalScanner:
-    def __init__(self, repo_path):
-        self.repo_path = Path(repo_path)
-    def get_files(self):
-        # Recursively get all .py files in repo_path
-        return [str(p) for p in self.repo_path.rglob('*.py')]
     def _find_files(self) -> List[str]:
-        """Walks directory and returns list of .py files."""
-        py_files = []
+        py_files: List[str] = []
         for root, _, files in os.walk(self.root_path):
             for file in files:
                 if file.endswith(".py"):
@@ -261,97 +248,75 @@ class LocalScanner:
         return py_files
 
     def _get_module_id(self, file_path: str) -> str:
-        """Converts file path to dot-notation module ID relative to root."""
         rel_path = os.path.relpath(file_path, self.root_path)
-        # Remove extension
         name_no_ext = os.path.splitext(rel_path)[0]
-        # Replace separators
-        module_id = name_no_ext.replace(os.sep, ".")
-        return module_id
+        return name_no_ext.replace(os.sep, ".")
 
-    def _scan_definitions(self, file_path: str):
+    def _scan_definitions(self, file_path: str) -> None:
         module_id = self._get_module_id(file_path)
-        
-        # Create Module Entity
-        # We model the file itself as a node
-        mod_entity = ModuleEntity(module_id, module_id.split('.')[-1], file_path)
+
+        mod_entity = ModuleEntity(module_id, module_id.split(".")[-1], file_path)
         self.graph.add_entity(mod_entity)
-        
+
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 source = f.read()
             tree = ast.parse(source, filename=file_path)
-            
-            visitor = DefinitionVisitor(self.graph, file_path, module_id)
-            visitor.visit(tree)
+            DefinitionVisitor(self.graph, file_path, module_id).visit(tree)
         except Exception as e:
             print(f"Error parsing {file_path}: {e}")
 
-    def _scan_relationships(self, file_path: str):
+    def _scan_relationships(self, file_path: str) -> None:
         module_id = self._get_module_id(file_path)
-        
+
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 source = f.read()
             tree = ast.parse(source, filename=file_path)
-            
-            # Pre-scan imports for this file to build resolution map
             imports_map = self._extract_imports(tree, module_id)
-            
-            visitor = RelationshipVisitor(self.graph, file_path, module_id, imports_map)
-            visitor.visit(tree)
-        except Exception as e:
-             # Already logged in pass 1 usually
-             pass
+            RelationshipVisitor(self.graph, file_path, module_id, imports_map).visit(tree)
+        except Exception:
+            # Parsing errors already reported in pass 1.
+            return
 
     def _extract_imports(self, tree: ast.AST, current_module_id: str) -> Dict[str, str]:
-        """
-        Extracts imports to build a symbol map for the file.
-        Returns: { 'alias/name': 'fully.qualified.id' }
-        """
-        imports_map = {}
-        
+        imports_map: Dict[str, str] = {}
+
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
-                    # import x as y
                     local_name = alias.asname if alias.asname else alias.name
-                    # Map local name to full name
                     imports_map[local_name] = alias.name
-                    
-                    # Also add relationship: File IMPORTS Module
-                    # (Simplified: logic assumes alias.name is the module ID, which is often true)
                     self.graph.add_relationship(Relationship(current_module_id, alias.name, REL_IMPORTS))
 
             elif isinstance(node, ast.ImportFrom):
-                # from x import y
                 module = node.module or ""
-                # Resolve relative imports
+
+                # Resolve relative imports (best-effort)
                 if node.level > 0:
-                    # Handle . or ..
-                    # This is complex to get perfect without full path logic, 
-                    # but we can approximation:
-                    parts = current_module_id.split('.')
-                    # level 1 = ., level 2 = ..
-                    # remove (level) parts from end
-                    base_parts = parts[:-node.level] if (len(parts) >= node.level) else []
-                    if module:
-                        base = ".".join(base_parts + [module])
-                    else:
-                        base = ".".join(base_parts)
-                    full_module_name = base
+                    parts = current_module_id.split(".")
+                    base_parts = parts[:-node.level] if len(parts) >= node.level else []
+                    full_module_name = ".".join([p for p in (base_parts + ([module] if module else [])) if p])
                 else:
                     full_module_name = module
 
                 for alias in node.names:
                     local_name = alias.asname if alias.asname else alias.name
-                    # y resolves to x.y
-                    full_target = f"{full_module_name}.{alias.name}"
-                    imports_map[local_name] = full_target
-                    
-                    # We usually say the file imports the *module*, not the specific function in the relationship (often)
-                    # But "code_intel" might want dependencies.
-                    # We'll add dependency on the module `full_module_name`
-                    self.graph.add_relationship(Relationship(current_module_id, full_module_name, REL_IMPORTS))
-                    
+                    if full_module_name:
+                        imports_map[local_name] = f"{full_module_name}.{alias.name}"
+                        self.graph.add_relationship(Relationship(current_module_id, full_module_name, REL_IMPORTS))
+
         return imports_map
+
+
+class LocalScanner:
+    """Lightweight helper used by the modernization pipeline.
+
+    This intentionally does not build entities/relationships; it only lists files.
+    """
+
+    def __init__(self, repo_path: str):
+        self.repo_path = Path(repo_path)
+
+    def get_files(self) -> List[str]:
+        return [str(p) for p in self.repo_path.rglob("*.py")]
